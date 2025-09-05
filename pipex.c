@@ -6,7 +6,7 @@
 /*   By: rbilim <rbilim@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 19:55:58 by rbilim            #+#    #+#             */
-/*   Updated: 2025/08/30 19:59:09 by rbilim           ###   ########.fr       */
+/*   Updated: 2025/09/05 19:58:48 by rbilim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,19 +39,17 @@ char	*find_path(char **env, char *cmd)
 		return (NULL);
 	spl_path = ft_split(env[i] + 5, ':');
 	i = 0;
-	temp = ft_strjoin(spl_path[i], "/");
 	while (spl_path[i])
 	{
+		temp = ft_strjoin(spl_path[i], "/");
 		arr = ft_strjoin(temp, cmd);
 		free(temp);
 		if (!access(arr, F_OK | X_OK))
 			return (arr);
-		else
-			return (free_all(spl_path), free(arr), NULL);
 		free(arr);
 		i++;
 	}
-	return (NULL);
+	return (free_all(spl_path), NULL);
 }
 
 void	*executer1(char **argv, char **env, int *fd)
@@ -73,7 +71,7 @@ void	*executer1(char **argv, char **env, int *fd)
 	dup2(fd[1], 1);
 	close(fd[0]);
 	close(fd[1]);
-	execv(path, command1);
+	execve(path, command1, env);
 	free_all(command1);
 	free(path);
 	perror("execv failed");
@@ -99,7 +97,7 @@ void	*executer2(char **argv, char **env, int *fd)
 	dup2(outfile, 1);
 	close(fd[0]);
 	close(fd[1]);
-	execv(path, command2);
+	execve(path, command2, env);
 	perror("execv failed");
 	free_all(command2);
 	free(path);
