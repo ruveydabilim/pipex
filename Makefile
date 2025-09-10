@@ -4,20 +4,28 @@ CFLAGS = -Wall -Wextra -Werror
 
 SRC = pipex.c
 
+BNSRC = ./pipex_bonus/pipex_bonus.c ./pipex_bonus/pipex_bonus_utils.c 
+
 OBJS = $(SRC:.c=.o)
 
 BNSOBJ = $(BNSRC:.c=.o)
 
-libft = ./libft/libft.a
+LIBFT = ./libft/libft.a
+
+GNL = ./pipex_bonus/get_next_line/get_next_line.c
+
+GNLU = ./pipex_bonus/get_next_line/get_next_line_utils.c
 
 all: $(NAME)
 
-$(NAME): $(OBJS) $(libft)
-	$(CC) $(CFLAGS) $(OBJS) $(libft) -o $(NAME)
+$(NAME): $(OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
 
-$(libft):	
+$(LIBFT):
 	make -C ./libft
 
+bonus: $(BNSOBJ) $(LIBFT)
+	$(CC) $(CFLAGS) $(BNSOBJ) $(LIBFT) $(GNL) $(GNLU) -o $(NAME)
 
 clean:
 	$(RM) $(OBJS) $(BNSOBJ)

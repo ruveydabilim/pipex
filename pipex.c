@@ -6,7 +6,7 @@
 /*   By: rbilim <rbilim@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 19:55:58 by rbilim            #+#    #+#             */
-/*   Updated: 2025/09/05 19:58:48 by rbilim           ###   ########.fr       */
+/*   Updated: 2025/09/10 17:45:41 by rbilim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ char	*find_path(char **env, char *cmd)
 	char	*temp;
 	int		i;
 
+	if (!cmd)
+		return (NULL);
 	i = 0;
 	while (env[i] && !ft_strnstr(env[i], "PATH=", 5))
 		i++;
@@ -98,7 +100,7 @@ void	*executer2(char **argv, char **env, int *fd)
 	close(fd[0]);
 	close(fd[1]);
 	execve(path, command2, env);
-	perror("execv failed");
+	perror("execve failed");
 	free_all(command2);
 	free(path);
 	exit(EXIT_FAILURE);
