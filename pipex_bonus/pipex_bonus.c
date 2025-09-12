@@ -6,7 +6,7 @@
 /*   By: rbilim <rbilim@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 0025/09/06 11:26:43 by bilim             #+#    #+#             */
-/*   Updated: 2025/09/10 17:34:50 by rbilim           ###   ########.fr       */
+/*   Updated: 2025/09/11 13:01:00 by rbilim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,16 +115,18 @@ int	main(int argc, char **argv, char **env)
 	int		infile;
 	int		outfile;
 	pid_t	pid;
-	int		fd;
 
 	if (argc < 5)
 	{
 		perror("invalid arguments count");
 		exit(EXIT_FAILURE);
 	}
-	infile = open(argv[1], O_RDONLY);
 	if (ft_strncmp(argv[1], "here_doc", 9) == 0)
-		heredoc_function(argv[2], argv);
+	{
+		heredoc_function(argv[2]);
+		exit(EXIT_SUCCESS);
+	}
+	infile = open(argv[1], O_RDONLY);
 	if (infile < 0)
 		perror("infile error");
 	pipeandexec(argc, env, argv, infile);

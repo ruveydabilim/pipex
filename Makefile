@@ -16,10 +16,12 @@ GNL = ./pipex_bonus/get_next_line/get_next_line.c
 
 GNLU = ./pipex_bonus/get_next_line/get_next_line_utils.c
 
+UTILS = pipex_utils.c
+
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(UTILS) $(LIBFT) -o $(NAME)
 
 $(LIBFT):
 	make -C ./libft
