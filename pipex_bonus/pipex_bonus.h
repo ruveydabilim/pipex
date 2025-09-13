@@ -6,7 +6,7 @@
 /*   By: rbilim <rbilim@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 17:29:17 by rbilim            #+#    #+#             */
-/*   Updated: 2025/09/10 18:00:23 by rbilim           ###   ########.fr       */
+/*   Updated: 2025/09/13 13:39:27 by rbilim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@
 # include "./get_next_line/get_next_line.h"
 # include <stdio.h>
 
-void	heredoc_function(char *limiter);
+int		heredoc_helper(int *fd, char **argv, char **env);
+void	free_all(char **arr);
+void	errorandexit(char *message);
+char	*find_path(char **env, char *cmd);
 
 #endif

@@ -6,36 +6,56 @@
 /*   By: rbilim <rbilim@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 17:24:49 by rbilim            #+#    #+#             */
-/*   Updated: 2025/09/12 16:22:15 by rbilim           ###   ########.fr       */
+/*   Updated: 2025/09/13 18:44:31 by rbilim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-void	heredoc_helper(char **argv, int argc, char **env)
+void	free_all(char **arr)
 {
-	
-}
+	int	i;
 
-void	heredoc_function(char *limiter, char **argv, int argc, char **env)
-{
-	char	*line;
-
-	while (1)
+	i = 0;
+	while (arr[i])
 	{
-		write(1, "heredoc> ", 9);
-		line = get_next_line(0);
-		if (!line)
-			break ;
-		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0
-			&& line[ft_strlen(limiter)] == '\n')
-		{
-			free(line);
-			break ;
-		}
-		free(line);
+		free(arr[i]);
+		i++;
 	}
-	heredoc_helper(argv, argc, env);
+	free(arr);
 }
 
+void	errorandexit(char *message)
+{
+	perror(message);
+	exit(EXIT_FAILURE);
+}
 
+char	*find_path(char **env, char *cmd)
+{
+	char	**spl_path;
+	char	*arr;
+	char	*temp;
+	int		i;
+
+	if (!cmd)
+		return (NULL);
+	i = 0;
+	while (env[i] && !ft_strnstr(env[i], "PATH=", 5))
+		i++;
+	if (!env[i])
+		return (NULL);
+	spl_path = ft_split(env[i] + 5, ':');
+	i = 0;
+	while (spl_path[i])
+	{
+		temp = ft_strjoin(spl_path[i], "/");
+		arr = ft_strjoin(temp, cmd);
+		free(temp);
+		if (!access(arr, F_OK | X_OK))
+			return (arr);
+		free(arr);
+		i++;
+	}
+	return (free_all(spl_path), NULL);
+}
