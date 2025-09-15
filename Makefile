@@ -35,7 +35,7 @@ clean:
 	make clean -C ./libft
 
 fclean: clean
-	rm -rf $(NAME)
+	rm -rf $(NAME) $(B_NAME)
 
 re: fclean all
 

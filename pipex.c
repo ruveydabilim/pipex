@@ -6,7 +6,7 @@
 /*   By: rbilim <rbilim@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 19:55:58 by rbilim            #+#    #+#             */
-/*   Updated: 2025/09/13 12:34:45 by rbilim           ###   ########.fr       */
+/*   Updated: 2025/09/15 19:05:36 by rbilim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,6 @@ int	main(int argc, char **argv, char **env)
 		executer2(argv, env, fd);
 	close(fd[0]);
 	close(fd[1]);
-	waitpid(pid2, NULL, 0);
 	waitpid(pid1, NULL, 0);
+	waitpid(pid2, NULL, 0);
 }

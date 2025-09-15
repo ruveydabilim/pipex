@@ -6,7 +6,7 @@
 /*   By: rbilim <rbilim@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 0025/09/06 11:26:43 by bilim             #+#    #+#             */
-/*   Updated: 2025/09/15 18:37:09 by rbilim           ###   ########.fr       */
+/*   Updated: 2025/09/15 19:02:21 by rbilim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,8 @@ int	main(int argc, char **argv, char **env)
 	int		outfile;
 	pid_t	pid;
 
-	if (argc < 5)
+	if ((ft_strncmp(argv[1], "here_doc", 9) != 0 && argc < 5)
+		|| (ft_strncmp(argv[1], "here_doc", 9) != 0 && argc < 6))
 	{
 		write(2, "invalid arguments count\n", 25);
 		exit(EXIT_FAILURE);
@@ -116,3 +117,6 @@ permission denied.");
 	close(infile);
 	close(outfile);
 }
+// hatalı komutla heredoc dene 
+// ilk komut hatalı olduğunda wc -l gibi komutlar pipedan veri alamasa da çalışmalı. 
+// 
