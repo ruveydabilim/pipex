@@ -1,4 +1,5 @@
 NAME = pipex
+B_NAME = pipexbonus
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
@@ -27,7 +28,7 @@ $(LIBFT):
 	make -C ./libft
 
 bonus: $(BNSOBJ) $(LIBFT)
-	$(CC) $(CFLAGS) $(BNSOBJ) $(LIBFT) $(GNL) $(GNLU) -o $(NAME)
+	$(CC) $(CFLAGS) $(BNSOBJ) $(LIBFT) $(GNL) $(GNLU) -o $(B_NAME)
 
 clean:
 	$(RM) $(OBJS) $(BNSOBJ)

@@ -6,7 +6,7 @@
 /*   By: rbilim <rbilim@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 17:24:49 by rbilim            #+#    #+#             */
-/*   Updated: 2025/09/13 18:44:31 by rbilim           ###   ########.fr       */
+/*   Updated: 2025/09/15 18:39:31 by rbilim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,3 +59,4 @@ char	*find_path(char **env, char *cmd)
 	}
 	return (free_all(spl_path), NULL);
 }
+// ilk komut çalışmasa bile ikinci komut çalışmalı...

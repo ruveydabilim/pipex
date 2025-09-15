@@ -6,7 +6,7 @@
 /*   By: rbilim <rbilim@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 0025/09/06 11:26:43 by bilim             #+#    #+#             */
-/*   Updated: 2025/09/13 18:57:10 by rbilim           ###   ########.fr       */
+/*   Updated: 2025/09/15 18:37:09 by rbilim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ void	executer(char *cmd, char **env, int infile, int outfile)
 	path = find_path(env, command[0]);
 	if (!path)
 	{
+		close(infile);
+		close(outfile);
 		free_all(command);
 		errorandexit("path is not found");
 	}
@@ -60,7 +62,7 @@ void	executer(char *cmd, char **env, int infile, int outfile)
 	errorandexit("execve error!");
 }
 
-void	pipeandexec(int argc, char **env, char **argv, int infile)
+int	pipeandexec(int argc, char **env, char **argv, int infile)
 {
 	pid_t	pid;
 	int		i;
@@ -85,6 +87,7 @@ void	pipeandexec(int argc, char **env, char **argv, int infile)
 		infile = fd[0];
 		i++;
 	}
+	return (infile);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -102,14 +105,11 @@ int	main(int argc, char **argv, char **env)
 		infile = heredoc_function(argv[2]);
 	else
 		infile = open(argv[1], O_RDONLY);
-	if (ft_strncmp(argv[1], "here_doc", 9) == 0)
-		outfile = open(argv[argc - 1], O_CREAT | O_WRONLY | O_APPEND, 0644);
-	else
-		outfile = open(argv[argc - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	outfile = open(argv[argc - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (infile < 0 || outfile < 0)
 		errorandexit("file error! infile\\outfile not exist or \
-			permission denied.");
-	pipeandexec(argc, env, argv, infile);
+permission denied.");
+	infile = pipeandexec(argc, env, argv, infile);
 	pid = fork();
 	if (pid == 0)
 		executer(argv[argc - 2], env, infile, outfile);
