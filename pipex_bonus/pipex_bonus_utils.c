@@ -6,23 +6,25 @@
 /*   By: rbilim <rbilim@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 17:24:49 by rbilim            #+#    #+#             */
-/*   Updated: 2025/09/15 18:39:31 by rbilim           ###   ########.fr       */
+/*   Updated: 2025/09/16 12:57:48 by rbilim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-void	free_all(char **arr)
+void	free_all(char **cmd, char *path, int file)
 {
 	int	i;
 
 	i = 0;
-	while (arr[i])
+	while (cmd[i])
 	{
-		free(arr[i]);
+		free(cmd[i]);
 		i++;
 	}
-	free(arr);
+	free(cmd);
+	free(path);
+	close(file);
 }
 
 void	errorandexit(char *message)
@@ -31,32 +33,31 @@ void	errorandexit(char *message)
 	exit(EXIT_FAILURE);
 }
 
-char	*find_path(char **env, char *cmd)
+char	*find_path(char **env, char **cmd)
 {
 	char	**spl_path;
 	char	*arr;
 	char	*temp;
 	int		i;
 
-	if (!cmd)
-		return (NULL);
 	i = 0;
 	while (env[i] && !ft_strnstr(env[i], "PATH=", 5))
 		i++;
-	if (!env[i])
+	if (!env[i] || !cmd)
 		return (NULL);
 	spl_path = ft_split(env[i] + 5, ':');
-	i = 0;
-	while (spl_path[i])
+	i = -1;
+	while (spl_path[++i])
 	{
 		temp = ft_strjoin(spl_path[i], "/");
-		arr = ft_strjoin(temp, cmd);
+		arr = ft_strjoin(temp, cmd[0]);
 		free(temp);
 		if (!access(arr, F_OK | X_OK))
 			return (arr);
 		free(arr);
-		i++;
 	}
-	return (free_all(spl_path), NULL);
+	free_all(spl_path, NULL, -1);
+	free_all(cmd, NULL, -1);
+	exit(127);
 }
 // ilk komut çalışmasa bile ikinci komut çalışmalı...

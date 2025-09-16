@@ -6,13 +6,13 @@
 /*   By: rbilim <rbilim@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 19:55:58 by rbilim            #+#    #+#             */
-/*   Updated: 2025/09/15 19:05:36 by rbilim           ###   ########.fr       */
+/*   Updated: 2025/09/16 12:52:18 by rbilim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	*executer1(char **argv, char **env, int *fd)
+void	executer1(char **argv, char **env, int *fd)
 {
 	int		infile;
 	char	**command1;
@@ -24,22 +24,22 @@ void	*executer1(char **argv, char **env, int *fd)
 	if (infile < 0)
 		errorandexit("infile error");
 	command1 = ft_split(argv[2], ' ');
-	path = find_path(env, command1[0]);
-	if (!path)
-		return (close(infile), free_all(command1), NULL);
+	if (!command1 || !command1[0])
+	{
+		free_all(command1, NULL, infile);
+		errorandexit("command not found");
+	}
+	path = find_path(env, command1);
 	close(fd[0]);
 	dup2(infile, 0);
 	dup2(fd[1], 1);
 	close(fd[1]);
 	execve(path, command1, env);
-	perror("execve failed");
-	close(infile);
-	free_all(command1);
-	free(path);
-	exit(EXIT_FAILURE);
+	free_all(command1, path, infile);
+	errorandexit("execve error");
 }
 
-void	*executer2(char **argv, char **env, int *fd)
+void	executer2(char **argv, char **env, int *fd)
 {
 	int		outfile;
 	char	**command2;
@@ -51,19 +51,19 @@ void	*executer2(char **argv, char **env, int *fd)
 	if (outfile < 0)
 		errorandexit("outfile error!");
 	command2 = ft_split(argv[3], ' ');
-	path = find_path(env, command2[0]);
-	if (!path)
-		return (close(outfile), free_all(command2), NULL);
+	if (!command2 || !command2[0])
+	{
+		free_all(command2, NULL, outfile);
+		errorandexit("command not found");
+	}
+	path = find_path(env, command2);
 	close(fd[1]);
 	dup2(fd[0], 0);
 	dup2(outfile, 1);
 	close(fd[0]);
 	execve(path, command2, env);
-	perror("execve failed");
-	close(outfile);
-	free_all(command2);
-	free(path);
-	exit(EXIT_FAILURE);
+	free_all(command2, path, outfile);
+	errorandexit("execve error");
 }
 
 int	main(int argc, char **argv, char **env)
@@ -71,6 +71,7 @@ int	main(int argc, char **argv, char **env)
 	int		fd[2];
 	pid_t	pid1;
 	pid_t	pid2;
+	int		status;
 
 	if (argc != 5)
 	{
@@ -88,5 +89,6 @@ int	main(int argc, char **argv, char **env)
 	close(fd[0]);
 	close(fd[1]);
 	waitpid(pid1, NULL, 0);
-	waitpid(pid2, NULL, 0);
+	waitpid(pid2, &status, 0);
+	return (WEXITSTATUS(status));
 }

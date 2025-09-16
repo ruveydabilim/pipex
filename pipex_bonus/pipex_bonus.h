@@ -6,7 +6,7 @@
 /*   By: rbilim <rbilim@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 17:29:17 by rbilim            #+#    #+#             */
-/*   Updated: 2025/09/13 13:39:27 by rbilim           ###   ########.fr       */
+/*   Updated: 2025/09/16 12:59:05 by rbilim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@
 # include <stdio.h>
 
 int		heredoc_helper(int *fd, char **argv, char **env);
-void	free_all(char **arr);
+void	free_all(char **cmd, char *path, int file);
 void	errorandexit(char *message);
-char	*find_path(char **env, char *cmd);
+char	*find_path(char **env, char **cmd);
 
 #endif
