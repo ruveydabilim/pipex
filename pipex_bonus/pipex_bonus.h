@@ -6,7 +6,7 @@
 /*   By: rbilim <rbilim@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 17:29:17 by rbilim            #+#    #+#             */
-/*   Updated: 2025/09/16 12:59:05 by rbilim           ###   ########.fr       */
+/*   Updated: 2025/09/17 15:04:09 by rbilim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
+# include <sys/wait.h>
 # include "../libft/libft.h"
 # include "./get_next_line/get_next_line.h"
 # include <stdio.h>

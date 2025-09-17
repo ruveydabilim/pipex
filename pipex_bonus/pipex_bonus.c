@@ -6,7 +6,7 @@
 /*   By: rbilim <rbilim@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 0025/09/06 11:26:43 by bilim             #+#    #+#             */
-/*   Updated: 2025/09/15 19:02:21 by rbilim           ###   ########.fr       */
+/*   Updated: 2025/09/17 15:06:05 by rbilim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,21 +44,18 @@ void	executer(char *cmd, char **env, int infile, int outfile)
 	char	*path;
 
 	command = ft_split(cmd, ' ');
-	path = find_path(env, command[0]);
-	if (!path)
+	if (!command || !command[0])
 	{
-		close(infile);
-		close(outfile);
-		free_all(command);
-		errorandexit("path is not found");
+		free_all(command, NULL, outfile);
+		errorandexit("command not found");
 	}
+	path = find_path(env, command);
 	dup2(infile, 0);
 	close(infile);
 	dup2(outfile, 1);
 	close(outfile);
 	execve(path, command, env);
-	free(path);
-	free_all(command);
+	free_all(command, path, -1);
 	errorandexit("execve error!");
 }
 
@@ -95,9 +92,10 @@ int	main(int argc, char **argv, char **env)
 	int		infile;
 	int		outfile;
 	pid_t	pid;
+	int		status;
 
 	if ((ft_strncmp(argv[1], "here_doc", 9) != 0 && argc < 5)
-		|| (ft_strncmp(argv[1], "here_doc", 9) != 0 && argc < 6))
+		|| (ft_strncmp(argv[1], "here_doc", 9) == 0 && argc < 6))
 	{
 		write(2, "invalid arguments count\n", 25);
 		exit(EXIT_FAILURE);
@@ -116,7 +114,6 @@ permission denied.");
 		executer(argv[argc - 2], env, infile, outfile);
 	close(infile);
 	close(outfile);
+	waitpid(pid, &status, -1);
+	return (WEXITSTATUS(status));
 }
-// hatalı komutla heredoc dene 
-// ilk komut hatalı olduğunda wc -l gibi komutlar pipedan veri alamasa da çalışmalı. 
-// 

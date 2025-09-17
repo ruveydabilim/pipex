@@ -6,7 +6,7 @@
 /*   By: rbilim <rbilim@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:03:47 by rbilim            #+#    #+#             */
-/*   Updated: 2025/09/16 12:57:29 by rbilim           ###   ########.fr       */
+/*   Updated: 2025/09/17 12:17:22 by rbilim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,3 @@ char	*find_path(char **env, char **cmd)
 	free_all(cmd, NULL, -1);
 	exit(127);
 }
-
