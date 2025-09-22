@@ -1,5 +1,5 @@
 NAME = pipex
-B_NAME = pipex
+B_NAME = pipexbonus
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
@@ -13,16 +13,16 @@ BNSOBJ = $(BNSRC:.c=.o)
 
 LIBFT = ./libft/libft.a
 
-GNL = ./pipex_bonus/get_next_line/get_next_line.c
+GNL = ./get_next_line/get_next_line.c
 
-GNLU = ./pipex_bonus/get_next_line/get_next_line_utils.c
+GNLU = ./get_next_line/get_next_line_utils.c
 
 UTILS = pipex_utils.c
 
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS) $(UTILS) $(LIBFT) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(UTILS) $(GNL) $(GNLU) $(LIBFT) -o $(NAME)
 
 $(LIBFT):
 	make -C ./libft

@@ -5,29 +5,23 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rbilim <rbilim@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/30 19:55:58 by rbilim            #+#    #+#             */
-/*   Updated: 2025/09/16 12:52:18 by rbilim           ###   ########.fr       */
+/*   Created: 2025/09/22 18:28:08 by rbilim            #+#    #+#             */
+/*   Updated: 2025/09/22 18:55:54 by rbilim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	executer1(char **argv, char **env, int *fd)
+void	executer1(char **argv, char **env, int *fd, int i, int infile)
 {
-	int		infile;
 	char	**command1;
 	char	*path;
-	int		i;
 
-	i = 0;
-	infile = open(argv[1], O_RDONLY);
-	if (infile < 0)
-		errorandexit("infile error");
-	command1 = ft_split(argv[2], ' ');
+	command1 = ft_split(argv[i], ' ');
 	if (!command1 || !command1[0])
 	{
 		free_all(command1, NULL, infile);
-		errorandexit("command not found");
+		errorandexit("command not found", 0);
 	}
 	path = find_path(env, command1);
 	close(fd[0]);
@@ -36,25 +30,26 @@ void	executer1(char **argv, char **env, int *fd)
 	close(fd[1]);
 	execve(path, command1, env);
 	free_all(command1, path, infile);
-	errorandexit("execve error");
+	errorandexit("execve error", 0);
 }
 
-void	executer2(char **argv, char **env, int *fd)
+void	executer2(char **argv, char **env, int *fd, int argc)
 {
 	int		outfile;
 	char	**command2;
 	char	*path;
-	int		i;
 
-	i = 0;
-	outfile = open(argv[4], O_CREAT | O_RDWR | O_TRUNC, 0644);
+	if (ft_strncmp(argv[1], "here_doc", 9) == 0)
+		outfile = open(argv[argc - 1], O_CREAT | O_WRONLY | O_APPEND, 0644);
+	else
+		outfile = open(argv[argc - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (outfile < 0)
-		errorandexit("outfile error!");
-	command2 = ft_split(argv[3], ' ');
+		errorandexit("outfile error!", 0);
+	command2 = ft_split(argv[argc - 2], ' ');
 	if (!command2 || !command2[0])
 	{
 		free_all(command2, NULL, outfile);
-		errorandexit("command not found");
+		errorandexit("command not found", 0);
 	}
 	path = find_path(env, command2);
 	close(fd[1]);
@@ -63,32 +58,55 @@ void	executer2(char **argv, char **env, int *fd)
 	close(fd[0]);
 	execve(path, command2, env);
 	free_all(command2, path, outfile);
-	errorandexit("execve error");
+	errorandexit("execve error", 0);
+}
+
+int	pipeandexec(int argc, char **env, char **argv, int *fd)
+{
+	pid_t	pid;
+	int		i;
+	int		infile;
+
+	i = 2;
+	if (ft_strncmp(argv[1], "here_doc", 9) == 0)
+		i = 3;
+	if (ft_strncmp(argv[1], "here_doc", 9) == 0)
+		infile = heredoc_function(argv[2]);
+	else
+		infile = open(argv[1], O_RDONLY);
+	while (i < argc - 2)
+	{
+		if (pipe(fd) == -1)
+			errorandexit("pipe error!", 0);
+		pid = fork();
+		if (pid == 0)
+			executer1(argv, env, fd, i, infile);
+		else 
+			waitpid(pid, NULL, 0);
+		if (infile != -1)
+			close(infile);
+		infile = fd[0];
+		i++;
+	}
+	return (infile);
 }
 
 int	main(int argc, char **argv, char **env)
 {
 	int		fd[2];
-	pid_t	pid1;
 	pid_t	pid2;
 	int		status;
+	int		infile;
 
-	if (argc != 5)
-	{
-		write(2, "invalid arguments count\n", 25);
-		exit(EXIT_FAILURE);
-	}
-	if (pipe(fd) == -1)
-		errorandexit("pipe error.");
-	pid1 = fork();
-	if (pid1 == 0)
-		executer1(argv, env, fd);
+	if (argc == 1 || (ft_strncmp(argv[1], "here_doc", 9) != 0 && argc < 5)
+		|| (ft_strncmp(argv[1], "here_doc", 9) == 0 && argc < 6))
+		errorandexit("invalid arguments count\n", 1);
+	infile = pipeandexec(argc, env, argv, fd);
 	pid2 = fork();
 	if (pid2 == 0)
-		executer2(argv, env, fd);
+		executer2(argv, env, fd, argc);
 	close(fd[0]);
 	close(fd[1]);
-	waitpid(pid1, NULL, 0);
 	waitpid(pid2, &status, 0);
 	return (WEXITSTATUS(status));
 }
