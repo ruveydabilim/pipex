@@ -6,7 +6,7 @@
 /*   By: rbilim <rbilim@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 19:55:47 by rbilim            #+#    #+#             */
-/*   Updated: 2025/09/22 18:44:07 by rbilim           ###   ########.fr       */
+/*   Updated: 2025/09/23 12:20:37 by rbilim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef struct s_pipex
 	char	**env;
 	char	**argv;
 	int		argc;
-} t_pipex;
+}	t_pipex;
 
 void	free_all(char **cmd, char *path, int file);
 void	errorandexit(char *message, int errstatus);

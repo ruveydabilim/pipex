@@ -6,7 +6,7 @@
 /*   By: rbilim <rbilim@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:03:47 by rbilim            #+#    #+#             */
-/*   Updated: 2025/09/22 15:37:18 by rbilim           ###   ########.fr       */
+/*   Updated: 2025/09/23 13:17:55 by rbilim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void	errorandexit(char *message, int errstatus)
 		write(2, message, 25);
 	else
 		perror(message);
-
 	exit(EXIT_FAILURE);
 }
 
